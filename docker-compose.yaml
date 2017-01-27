@@ -1,0 +1,7 @@
+version: '2'
+services:
+  webapp:
+    build: .
+    ports:
+      - "1323:1323"
+    restart: always
