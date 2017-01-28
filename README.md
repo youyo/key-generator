@@ -9,7 +9,7 @@ https://sslkey-generator.arukascloud.io/
 https://hub.docker.com/r/youyo/sslkey-generator/
 
 ```
-$ docker run -d -p 1323:1323 youyo/sslkey-generator:v5
+$ docker run -d -p 1323:1323 youyo/sslkey-generator:v6
 ```
 
 ## API
