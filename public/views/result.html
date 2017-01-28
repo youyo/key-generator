@@ -1,0 +1,49 @@
+{{define "result"}}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SSL Key Generator</title>
+  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css'>
+</head>
+
+<body>
+  <div class="container">
+  <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+        <h2>SSL Key Generator</h2>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3">
+        <div class="panel panel-default">
+          <div class="panel-heading">Generated Keys</div>
+
+  <!-- List group -->
+  <ul class="list-group">
+    <li class="list-group-item">
+		{{$var0 := index . 0}}
+		PrivateKey : {{$var0.Name}}
+      <pre>
+{{$var0.Data}}
+      </pre>
+    </li>
+    <li class="list-group-item">
+		{{$var1 := index . 1}}
+		CSR : {{$var1.Name}}
+      <pre>
+{{$var1.Data}}
+      </pre>
+    </li>
+  </ul>
+</div>
+      </div>
+  </div>
+</div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+    <script src="js/index.js"></script>
+
+</body>
+</html>
+{{end}}

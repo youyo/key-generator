@@ -15,6 +15,10 @@
 			"revisionTime": "2017-01-26T04:44:08Z"
 		},
 		{
+			"path": "github.com/labstack/echo/engine/standard",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "24UVnJSTqx1qMdkOllgBs+RAe10=",
 			"path": "github.com/labstack/echo/middleware",
 			"revision": "aa483fd34ff45d240dee7e08db207e56ab397d13",

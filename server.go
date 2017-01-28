@@ -1,14 +1,20 @@
 package main
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/asn1"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
+	"io"
+	"io/ioutil"
 	"net/http"
+
+	"html/template"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -26,15 +32,23 @@ type (
 	}
 
 	Response struct {
-		Response []Key `json:"response"`
-		Status   bool  `json:"status"`
-		Error    error `json:"error"`
+		Data   []Key `json:"response"`
+		Status bool  `json:"status"`
+		Error  error `json:"error"`
 	}
 	Key struct {
 		Name string `json:"name"`
 		Data string `json:"data"`
 	}
 )
+
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
 
 func main() {
 	// initialilze
@@ -43,7 +57,15 @@ func main() {
 	// cors
 	e.Use(middleware.CORS())
 
-	e.GET("/", func(c echo.Context) error { return index(c) })
+	// use static file
+	e.Static("/", "public/assets")
+	e.Renderer = &Template{
+		templates: template.Must(template.ParseGlob("public/views/*.html")),
+	}
+
+	// form
+	e.GET("/", index)
+	e.POST("/result", result)
 
 	// create csr & privatekey
 	e.POST("/generate", func(c echo.Context) error { return generateKeys(c) })
@@ -53,7 +75,34 @@ func main() {
 }
 
 func index(c echo.Context) error {
-	return c.JSON(http.StatusOK, Response{Status: true, Error: nil})
+	return c.Render(http.StatusOK, "index", "")
+}
+
+func result(c echo.Context) error {
+	r := NewRequest()
+	r.CommonName = c.FormValue("CommonName")
+	r.Country = c.FormValue("Country")
+	r.State = c.FormValue("Province")
+	r.Locality = c.FormValue("Locality")
+	r.OrganizationName = c.FormValue("Organization")
+	r.OrganizationalUnitName = c.FormValue("OrganizationalUnit")
+	input, err := json.Marshal(r)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, Response{Data: nil, Error: err})
+	}
+	//res, err := http.Post("https://sslkey-generator.arukascloud.io/generate", "application/json", bytes.NewBuffer(input))
+	res, err := http.Post("http://127.0.0.1:1323/generate", "application/json", bytes.NewBuffer(input))
+	defer res.Body.Close()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
+	}
+	var data Response
+	json.Unmarshal(body, &data)
+	return c.Render(http.StatusCreated, "result", data.Data)
 }
 
 func NewRequest() (r *Request) {
@@ -64,32 +113,32 @@ func generateKeys(c echo.Context) (err error) {
 	// bind json
 	r := NewRequest()
 	if err = c.Bind(r); err != nil {
-		return c.JSON(http.StatusBadRequest, Response{Response: nil, Error: err})
+		return c.JSON(http.StatusBadRequest, Response{Data: nil, Error: err})
 	}
 
 	// generate private key
 	p, err := generatePrivateKeyBytes()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Response{Response: nil, Error: err})
+		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
 	}
 	privateKey, err := exportPrivateKey(p)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Response{Response: nil, Error: err})
+		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
 	}
 
 	// generate csr
 	csrBytes, err := r.generateCsrBytes(p)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Response{Response: nil, Error: err})
+		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
 	}
 	csr, err := exportCsr(csrBytes)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, Response{Response: nil, Error: err})
+		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
 	}
 
 	// return success response
 	response := Response{
-		Response: []Key{
+		Data: []Key{
 			Key{
 				Name: r.CommonName + ".key",
 				Data: privateKey,
