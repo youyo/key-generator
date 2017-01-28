@@ -90,8 +90,7 @@ func result(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, Response{Data: nil, Error: err})
 	}
-	//res, err := http.Post("https://sslkey-generator.arukascloud.io/generate", "application/json", bytes.NewBuffer(input))
-	res, err := http.Post("http://127.0.0.1:1323/generate", "application/json", bytes.NewBuffer(input))
+	res, err := http.Post("https://sslkey-generator.arukascloud.io/generate", "application/json", bytes.NewBuffer(input))
 	defer res.Body.Close()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
