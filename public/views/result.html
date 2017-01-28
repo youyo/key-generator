@@ -18,25 +18,24 @@
       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3">
         <div class="panel panel-default">
           <div class="panel-heading">Generated Keys</div>
-
-  <!-- List group -->
-  <ul class="list-group">
-    <li class="list-group-item">
-		{{$var0 := index . 0}}
-		PrivateKey : {{$var0.Name}}
-      <pre>
+          <!-- List group -->
+          <ul class="list-group">
+            <li class="list-group-item">
+              {{$var0 := index . 0}}
+              PrivateKey : {{$var0.Name}}
+              <pre>
 {{$var0.Data}}
-      </pre>
-    </li>
-    <li class="list-group-item">
-		{{$var1 := index . 1}}
-		CSR : {{$var1.Name}}
-      <pre>
+              </pre>
+            </li>
+            <li class="list-group-item">
+              {{$var1 := index . 1}}
+              CSR : {{$var1.Name}}
+              <pre>
 {{$var1.Data}}
-      </pre>
-    </li>
-  </ul>
-</div>
+              </pre>
+            </li>
+          </ul>
+        </div>
       </div>
   </div>
 </div>
