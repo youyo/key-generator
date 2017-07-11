@@ -1,15 +1,11 @@
 # SSL Key generator
 
-## Website
-
-https://sslkey-generator.arukascloud.io/
-
 ## ContainerImage
 
 https://hub.docker.com/r/youyo/sslkey-generator/
 
 ```
-$ docker run -d -p 1323:1323 youyo/sslkey-generator:v8
+$ docker run -d -p 1323:1323 youyo/sslkey-generator:latest
 ```
 
 ## API
@@ -22,5 +18,5 @@ $ curl -X POST -H "Content-Type: application/json" -d '{
   "locality": "Sendai",
   "organization_name": "example inc.",
   "organizational_unit_name": "sales"
-}' https://sslkey-generator.arukascloud.io/generate
+}' http://your-site-address:1323/generate
 ```
