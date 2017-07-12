@@ -1,4 +1,4 @@
-FROM golang:1.7.4-wheezy
+FROM golang:1.8-jessie
 MAINTAINER youyo
 
 ENV APP_DIR /go/src/github.com/youyo/key-generator/
