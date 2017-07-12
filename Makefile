@@ -5,33 +5,12 @@ OWNER := youyo
 
 ## Setup
 setup:
-	go get github.com/kardianos/govendor
+	go get -u github.com/golang/dep/cmd/dep
 	go get github.com/Songmu/make2help/cmd/make2help
 
 ## Install dependencies
 deps: setup
-	govendor sync
-
-## Initialize and Update dependencies
-update: setup
-	rm -rf /vendor/vendor.json
-	govendor fetch +outside
-
-## Vet
-vet: setup
-	govendor vet +local
-
-## Lint
-lint: setup
-	go get github.com/golang/lint/golint
-	govendor vet +local
-	for pkg in $$(govendor list -p -no-status +local); do \
-		golint -set_exit_status $$pkg || exit $$?; \
-	done
-
-## Run tests
-test: deps
-	govendor test +local -cover
+	dep ensure -update
 
 ## Show help
 help:

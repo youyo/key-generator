@@ -90,11 +90,11 @@ func result(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, Response{Data: nil, Error: err})
 	}
-	res, err := http.Post("https://sslkey-generator.arukascloud.io/generate", "application/json", bytes.NewBuffer(input))
-	defer res.Body.Close()
+	res, err := http.Post(c.Scheme()+"://"+c.Request().Host+"/generate", "application/json", bytes.NewBuffer(input))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
 	}
+	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, Response{Data: nil, Error: err})
