@@ -71,7 +71,7 @@ func main() {
 	e.POST("/generate", func(c echo.Context) error { return generateKeys(c) })
 
 	// server start
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.StartAutoTLS(":1323"))
 }
 
 func index(c echo.Context) error {
