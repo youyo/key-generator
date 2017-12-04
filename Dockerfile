@@ -1,12 +1,17 @@
-FROM golang:1.8-jessie
-MAINTAINER youyo
+FROM golang:1.9-alpine
+LABEL maintainer "youyo <1003ni2@gmail.com>"
 
-ENV APP_DIR /go/src/github.com/youyo/key-generator/
+ENV DIR /go/src/github.com/youyo/sslkey-generator/
+ENV PORT 1323
 
-ADD . ${APP_DIR}
-WORKDIR ${APP_DIR}
-RUN apt-get install make git gcc && \
-	make deps
+WORKDIR ${DIR}
 
-EXPOSE 1323:1323
-ENTRYPOINT ["go","run","server.go"]
+ADD . ${DIR}
+RUN apk add --update --no-cache --virtual _dependencies git && \
+	apk add --no-cache make && \
+	make setup && \
+	make deps && \
+	apk del _dependencies
+
+EXPOSE ${PORT}:${PORT}
+CMD ["make", "run"]

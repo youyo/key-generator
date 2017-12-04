@@ -1,11 +1,13 @@
 # SSL Key generator
 
+https://sslkey-generator.herokuapp.com/
+
 ## ContainerImage
 
 https://hub.docker.com/r/youyo/sslkey-generator/
 
 ```
-$ docker run -d -p 1323:1323 youyo/sslkey-generator:latest
+$ docker container run -d -p 1323:1323 -e PORT=1323 youyo/sslkey-generator:
 ```
 
 ## API
@@ -18,5 +20,5 @@ $ curl -X POST -H "Content-Type: application/json" -d '{
   "locality": "Sendai",
   "organization_name": "example inc.",
   "organizational_unit_name": "sales"
-}' http://your-site-address:1323/generate
+}' http://your-site-address/generate
 ```

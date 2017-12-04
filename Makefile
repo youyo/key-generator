@@ -1,19 +1,23 @@
-Name := key-generator
-Version := $(shell git describe --tags --abbrev=0)
-OWNER := youyo
 .DEFAULT_GOAL := help
 
 ## Setup
 setup:
-	go get -u github.com/golang/dep/cmd/dep
-	go get github.com/Songmu/make2help/cmd/make2help
+	go get -v -u github.com/golang/dep/cmd/dep
 
 ## Install dependencies
-deps: setup
-	dep ensure -update
+deps:
+	dep ensure
+
+## Start Server
+run:
+	go run *.go
+
+## Deploy to heroku
+deploy:
+	heroku container:push web
 
 ## Show help
 help:
 	@make2help $(MAKEFILE_LIST)
 
-.PHONY: setup deps update vet lint test help
+.PHONY: setup deps run deploy help

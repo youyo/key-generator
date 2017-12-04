@@ -10,11 +10,11 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"errors"
+	"html/template"
 	"io"
 	"io/ioutil"
 	"net/http"
-
-	"html/template"
+	"os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -71,7 +71,7 @@ func main() {
 	e.POST("/generate", func(c echo.Context) error { return generateKeys(c) })
 
 	// server start
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }
 
 func index(c echo.Context) error {
