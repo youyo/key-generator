@@ -7,7 +7,7 @@ https://sslkey-generator.herokuapp.com/
 https://hub.docker.com/r/youyo/sslkey-generator/
 
 ```
-$ docker container run -d -p 1323:1323 -e PORT=1323 youyo/sslkey-generator:
+$ docker container run -d -p 1323:1323 -e PORT=1323 youyo/sslkey-generator:latest
 ```
 
 ## API
